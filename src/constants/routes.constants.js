@@ -12,6 +12,7 @@ const Routes = {
   CART: '/cart',
   WISHLIST: '/wishlist',
   ORDER: '/order',
+  CATEGORY: '/category',
 };
 
 module.exports = { Routes };

@@ -118,7 +118,30 @@ exports.getBook = async (req, res) => {
 
 exports.getAllBook = async (req, res) => {
   try {
-    const data = await Book.find();
+    const pageOptions = {
+      page: parseInt(req.query.page, 10) || 0,
+      limit: parseInt(req.query.limit, 10) || 10,
+    };
+    const { title, author, category, orderby, price } = req.query;
+    // const result = await Book.find()
+    //   .populate({
+    //     path: 'category',
+    //     match: { _id: { $eq: category } },
+    //     select: { type: 1, _id: 0 },
+    //   })
+    //   .then((orders) => orders.filter((order) => order.category != null));
+    const filter = {};
+    if (title) filter.title = title;
+    if (author) filter.author = author;
+    // if (category) filter.category.type = category;
+    const data = await Book.find(filter)
+      .populate('category')
+      .sort({
+        createdAt: orderby === 'most_recent' ? -1 : 1,
+        // price: price === 'high_to_low' ? -1 : 1,
+      })
+      .skip(pageOptions.page * pageOptions.limit)
+      .limit(pageOptions.limit);
 
     if (!data) {
       return res.status(400).json({

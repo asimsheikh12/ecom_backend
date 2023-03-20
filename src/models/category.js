@@ -4,7 +4,7 @@ const categorySchema = new Schema(
   {
     type: {
       type: String,
-      unique: false,
+      unique: true,
       required: [true, 'Type is required'],
       trim: true,
     },
